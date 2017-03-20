@@ -1,0 +1,327 @@
+my own ess.txt
+     ostack:
+         domain: ostack.cde.1nc
+         ip4net: 10.0.48.{0}/20
+      manage:
+         domain: cde.1nc
+         ip4net: 10.0.32.{0}/20
+         gateway: 10.0.32.1
+
+
+  vstage network: 10.0.64.{0}/20
+refresh pillar
+salt-call saltutil.pillar_refresh
+
+
+
+=== install aptly===
+https://www.aptly.info/download/
+
+cd sources.list.d/
+  244  ls
+  245  vim aptly.list
+
+
+  deb http://repo.aptly.info/ squeeze main
+
+
+
+  246  apt-get update
+  247  apt-key adv --keyserver keys.gnupg.net --recv-keys 9E3E53F19C7DE460
+  248  apt-cache search aptly
+  249  apt-cache madison aptly
+  250  apt-get install aptly=0.9.5
+  apt-get install bzip2, gnupg and gpgv
+
+
+
+sources.list
+deb file:/var/storage/ess-a1.cde.1nc/repos/aptly/public/cde/ubuntu/ trusty main restricted universe multiverse
+deb file:/var/storage/ess-a1.cde.1nc/repos/aptly/public/cde/ubuntu/  trusty-updates main restricted universe multiverse
+deb file:/var/storage/ess-a1.cde.1nc/repos/aptly/public/cde/ubuntu/ trusty-backports main restricted universe multiverse
+
+deb file:/var/storage/ess-a1.cde.1nc/repos/aptly/public/cde/maas/ trusty main
+deb file:/var/storage/ess-a1.cde.1nc/repos/aptly/public/cde/salt/ trusty main
+deb file:/var/storage/ess-a1.cde.1nc/repos/aptly/public/cde/alchemy/ trusty main
+
+
+apt-get update
+
+sed -i "/^USE_LXC_BRIDGE/c\USE_LXC_BRIDGE=\"false\"" /etc/default/lxc-net
+echo 'MIRROR="file:/var/storage/ess-a1.cde.1nc/repos/aptly/public/cde/ubuntu/ubuntu"' >> /etc/default/lxc
+echo 'SECURITY_MIRROR=$MIRROR' >> /etc/default/lxc
+
+
+oot@wess-a1:~# ip r
+default via 10.0.32.1 dev br-mgmt
+10.0.3.0/24 dev lxcbr0  proto kernel  scope link  src 10.0.3.1
+10.0.32.0/24 dev br-mgmt  proto kernel  scope link  src 10.0.32.8
+10.0.48.0/24 dev eth2  proto kernel  scope link  src 10.0.48.8  metric 1
+10.0.64.0/24 dev eth1  proto kernel  scope link  src 10.0.64.8  metric 1
+169.254.0.0/16 dev br-mgmt  scope link  metric 1000
+192.168.122.0/24 dev virbr0  proto kernel  scope link  src 192.168.122.1
+
+
+
+root@wess-a1:~# cat /etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet manual
+
+auto br-mgmt
+iface br-mgmt inet static
+    address 10.0.32.8/24
+    gateway 10.0.32.1
+        bridge_ports eth0
+	bridge_stp off
+        bridge_fd 0
+
+
+
+ scp alchemy-saltstack_1.0-10.6_amd64.deb to ess-a1 server
+
+=== salt code change ====
+!!!!!! --- ess-a1 hostname must be short name
+root@wess-a1:/srv/pillar/base# salt-call grains.get nodename
+local:
+    wess-a1
+root@wess-a1:/srv/pillar/base# salt-call grains.get fqdn
+local:
+    wess-a1.cde.1nc
+root@wess-a1:/srv/pillar/base# cat /etc/hostname
+wess-a1
+
+list containers
+salt-call pillar.get containers
+
+cd /srv/salt/base/_modules/
+- deploy container : container.py
+- after change the code have to sync the module
+
+salt-call saltutil.sync_modules
+- then try debug again
+salt-call -l debug container.deployed  test=true profile=cde-bootstrap
+ salt-call -l info container.destroyed saltmaster-a1
+
+
+
+!!!!! ---- /srv/pillar/base/lxc_config.sls change IP address
+
+change /srv/pillar/cde/container.sls target name to my own hostname
+
+!!!! ---- make sure /srv/salt/base/container/files/bootstrap/install_salt.sh
+change the ip
+
+
+!!!! ---- /usr/share/lxc/templates/lxc-ubuntu-alchemy
+change  below ip
+repoip=10.1.48.101
+saltip=10.1.48.102
+profile=10.1.48.102
+this template is used for /srv/pillar/base/lxc_config.sls
+which will configure the newly created LXC
+
+
+==== after deploy saltmaster-a1 ===
+loginside and scp alchemy-saltmaster pkg to it then install
+then deploy repo-a1 micros-a1
+then accept the key
+
+
+==== now run 220.cde_stagetwo.s ==============================
+if action basic; then
+  lxc-attach -n saltmaster-a1 -- salt \*.cde.1nc state.sls system.upgrade
+  lxc-attach -n saltmaster-a1 -- salt repo-a1.cde.1nc state.sls repo
+  lxc-attach -n saltmaster-a1 -- salt micros-a1.cde.1nc state.sls bind
+fi
+
+base/system/upgrade.sls
+!!!! HOW TO DO DEBUG ON MINION AND MASTER
+To isotlate the issue
+# service salt-minion stop
+root@repo-a1:/# salt-minion -l debug
+can do the same in salt-master  # salt-master -l debug
+
+repo-a1 state:
+get error with mount point---> modify the repo-a1 fstab file
+
+root@wess-a1:/var/lib/lxc/repo-a1# cat fstab
+# extra bind mounts coming from the salt pillar settings
+# referenced by include from main config
+# this file is managed by salt - do not edit locally
+
+lxc-attach -n saltmaster-a1 -- salt repo-a1.cde.1nc state.sls repo
+/var/storage/repo-a1.cde.1nc var/storage none bind 0 0
+/var/storage/ess-a1.cde.1nc/repos var/www/repos none bind 0 0   ---> here change to my local mount point which is ess-a1
+
+
+
+
+if action shining; then
+  lxc-attach -n saltmaster-a1 -- salt \*.cde.1nc state.sls core.roles
+  lxc-attach -n saltmaster-a1 -- salt \*.cde.1nc state.sls core.resolver
+  lxc-attach -n saltmaster-a1 -- salt \*.cde.1nc state.sls core
+  lxc-attach -n saltmaster-a1 -- salt \*.cde.1nc state.sls debug.unlocked
+  lxc-attach -n saltmaster-a1 -- salt \*.cde.1nc state.sls sshd
+
+!!!! run bind have to change the ip
+/srv/pillar/cde/default.sls
+change all the setting here
+ dns-servers:
+    - 10.0.32.103
+    - 10.0.32.104
+        internal:
+      ntp1.cde.1nc: 10.0.32.8   -- original is ess-a1
+      ntp2.cde.1nc: 10.0.32.9    -- ess-a2:q
+  hosts:
+    network:
+      ostack:
+         domain: ostack.cde.1nc
+         ip4net: 10.0.48.{0}/20
+      manage:
+         domain: cde.1nc
+         ip4net: 10.0.32.{0}/20
+         gateway: 10.0.32.1
+
+
+
+
+
+ lxc-attach -n saltmaster-a1 -- salt \*.cde.1nc state.sls core
+!!!! -- change host file content
+/srv/salt/base/core/files/hosts
+
+!!!!change fqdn_ip4 --> ipv4
+/srv/salt/base/core/files/hosts
+{{ grains['ipv4'][0] }}  {{ grains.fqdn }} {{ grains.host }}
+{% endif %}
+
+saltmaster#salt micros-a1.cde.1nc grains.get fqdn_ip4
+will get run ip so we have to change it to ipv4
+how to get ipv4 from server by runing salt
+root@micros-a1:~# salt-call grains.get ipv4
+root@saltmaster#salt micros-a1.cde.1nc grains.get fqdn_ip4
+!!!!! a reason for it maybe the DNS record i never change!!!!
+!!!! change dns :
+/srv/salt/base/bind/files/named.zones
+and also the file inside /srv/salt/base/bind/files/zones
+
+=====update dns  20.cde_stagetwo.sh
+saltmaster#salt -C '*.cde.1nc and G@roles:dns' state.sls bind (default test=False)
+or just run
+root@saltmaster-a1:salt micros-a1.cde.1nc state.sls bind
+root@saltmaster-a1:/srv/salt/base/bind/files/zones# salt micros-a1.cde.1nc grains.get roles
+micros-a1.cde.1nc:
+    - container
+    - cde_bootstrap
+    - dns
+    - dhcp
+
+ root@saltmaster-a1:~# salt \*.vstage.1nc saltutil.pillar_refresh
+
+file have to change
+/srv/salt/base/bind/files/named.zones
+/srv/salt/base/bind/files/zones/ all the records files inside
+
+==== run dhcp for maas  20.cde_stagetwo.sh
+lxc-attach -n saltmaster-a1 -- salt micros-a1.cde.1nc state.sls dhcpd
+! maas partion file location
+/srv/salt/base/maas/files/scripts
+also under  /srv/salt/base/repo/files/maas/partit.sh   <--- identify the smallpartition,big partion
+
+==== end run 220.cde_stagetwo.s ==============================
+
+-- reconfigure wess-a1  --- better dont run it... else repo will changelx
+core.roles
+root@wess-a1:# salt-call  state.sls
+core.roles
+core.resolver
+debug.unlocked
+sshd
+
+
+========= now run 30.cde_stagethree.sh ====================
+dedploy maas from ess-a1
+because we have repo already... we have to change the /srv/salt/base/container/files/bootstrap/install_salt.sh
+10.0.32.8  repo.cde.1nc\n\
+repoip=10.0.32.101
+
+!!!! remember to change /usr/share/lxc/templates\lxc-ubuntu-alchemy repo ip
+repoip=10.0.32.101
+
+root@wess-a1:/srv/salt/base/repo/files/maas# salt-call -l debug container.deployed maas-a1 profile=ubuntu test=false
+
+then access key on saltmater-a1
+on saltmaster:
+salt maas-a1.cde.1nc state.sls system.upgrade
+salt maas-a1.cde.1nc state.sls core.roles
+salt maas-a1.cde.1nc state.sls core
+salt maas-a1.cde.1nc state.sls debug.unlocked
+salt maas-a1.cde.1nc state.sls sshd
+salt maas-a1.cde.1nc state.sls maas
+
+maas has issue so skip
+
+
+========= now create ess-a2 from public cloud, since my container can not talk to ess-a2 so i change ess-a1 as saltmaster node and repo node====
+
+since now wess-a1 is the salmaster and the repo
+we change the ess-a2 host file as below
+root@wess-a2:/etc/apt# cat /etc/hosts
+127.0.0.1 localhost
+
+10.0.32.9  wess-a2.cde.1nc wess-a2
+
+
+# important infrastructure resources
+10.0.32.8 repo.cde.1nc repo
+10.0.32.8 salt.cde.1nc salt
+
+source file ---
+deb http://repo.cde.1nc/cde/ubuntu trusty main restricted universe multiverse
+deb http://repo.cde.1nc/cde/ubuntu trusty-updates main restricted universe multiverse
+deb http://repo.cde.1nc/cde/ubuntu trusty-security main restricted universe multiverse
+
+deb http://repo.cde.1nc/cde/maas/ trusty main
+deb http://repo.cde.1nc/cde/salt/ trusty main
+deb http://repo.cde.1nc/cde/alchemy/ trusty main
+--- before update repo , import the key
+root@wess-a1:/var/storage/ess-a1.cde.1nc/repos/files# scp alchemy.key ubuntu@10.0.32.9:/tmp
+ubuntu@10.0.32.9's password:
+alchemy.key
+root@wess-a2:/tmp# ls
+alchemy.key
+root@wess-a2:/tmp# apt-key add alchemy.key
+OK
+root@wess-a2:/tmp# apt-key list
+root@wess-a2:/tmp# apt-get update
+
+--- install minion on ess-a2---
+root@wess-a2:/tmp# apt-cache madison salt-minion
+salt-minion | 2015.5.10+ds-1 | http://repo.cde.1nc/cde/salt/ trusty/main amd64 Packages
+salt-minion | 0.17.5+ds-1 | http://repo.cde.1nc/cde/ubuntu/ trusty/universe amd64 Packages
+root@wess-a2:/tmp# apt-get install salt-minion=2015.5.10+ds-1
+
+
+**** remember to allow salt port 4505-4506 ****
+root@wess-a1:/var/storage/ess-a1.cde.1nc/repos/files# salt-key  -L
+Accepted Keys:
+micros-a1.cde.1nc
+repo-a1.cde.1nc
+wess-a1.cde.1nc
+wess-a2.cde.1nc
+now ess-a2 is controled by salt-master
+
+---- now make ess-a2 as dns server (micros-a1)
+destory exiting micros-a1 first
+salt -l debug  micros-a1.cde.1nc container.destroyed micros-a1.cde.1nc test=false
+
+
+

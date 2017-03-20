@@ -1,0 +1,89 @@
+;
+; BIND data file for the 1nc domain
+;
+$TTL	604800
+@	IN	SOA	localhost. root.localhost. (
+			      3		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	   IN NS dns-a1.cde.1nc.
+@	   IN NS dns-a2.cde.1nc.
+
+1net                  IN     A    10.0.64.202
+reseller              IN     A    10.0.64.203
+
+compute-a1            IN     A    10.0.64.10
+compute-a2            IN     A    10.0.64.11
+ctl-a1                IN     A    10.0.64.12
+ctl-a2                IN     A    10.0.64.13
+db-a1                 IN     A    10.0.64.14
+db-a2                 IN     A    10.0.64.15
+db-a3                 IN     A    10.0.64.16
+storage-a1            IN     A    10.0.64.17
+storage-a2            IN     A    10.0.64.18
+storage-a3            IN     A    10.0.64.19
+neutron-a1            IN     A    10.0.64.20
+neutron-a2            IN     A    10.0.64.21
+compute-a3            IN     A    10.0.64.22
+compute-a4            IN     A    10.0.64.23
+
+haproxy-a1               IN     A    10.0.64.100
+haproxy-a2               IN     A    10.0.64.101
+cdos-a1                  IN     A    10.0.64.102
+cdos-a2                  IN     A    10.0.64.103
+horizon-a1               IN     A    10.0.64.104
+horizon-a2               IN     A    10.0.64.105
+glance-a1                IN     A    10.0.64.106
+glance-a2                IN     A    10.0.64.107
+cinder-a1                IN     A    10.0.64.108
+cinder-a2                IN     A    10.0.64.109
+nova-a1                  IN     A    10.0.64.110
+nova-a2                  IN     A    10.0.64.111
+keystone-a1              IN     A    10.0.64.112
+keystone-a2              IN     A    10.0.64.113
+cneutron-a1              IN     A    10.0.64.114
+cneutron-a2              IN     A    10.0.64.115
+ceilometer-a1            IN     A    10.0.64.116
+ceilometer-a2            IN     A    10.0.64.117
+cmd-a1                   IN     A    10.0.64.118
+cmd-a2                   IN     A    10.0.64.119
+bootstrap-a1             IN     A    10.0.64.120
+bootstrap-a2             IN     A    10.0.64.121
+bootstrap-a3             IN     A    10.0.64.139
+percona-a1               IN     A    10.0.64.122
+percona-a2               IN     A    10.0.64.123
+percona-a3               IN     A    10.0.64.124
+cdosdb-a1                IN     A    10.0.64.125
+cdosdb-a2                IN     A    10.0.64.126
+cdosdb-a3                IN     A    10.0.64.127
+rabbitmq-a1              IN     A    10.0.64.128
+rabbitmq-a2              IN     A    10.0.64.129
+mongodb-a1               IN     A    10.0.64.130
+mongodb-a2               IN     A    10.0.64.131
+mongodb-a3               IN     A    10.0.64.132
+elasticsearch-a1         IN     A    10.0.64.133
+elasticsearch-a2         IN     A    10.0.64.134
+elasticsearch-a3         IN     A    10.0.64.135
+logstash-a1              IN     A    10.0.64.136
+logstash-a2              IN     A    10.0.64.137
+logstash-a3              IN     A    10.0.64.138
+cdos-t1                  IN     A    10.0.64.140
+cdosdb-t1                IN     A    10.0.64.141
+appcara-a1               IN     A    10.0.64.150
+appcara-a2               IN     A    10.0.64.151
+appcara-b1               IN     A    10.0.64.152
+appcara-b2               IN     A    10.0.64.153
+appcaradb-a1             IN     A    10.0.64.154
+appcaradb-a2             IN     A    10.0.64.155
+appcaradb-a3             IN     A    10.0.64.156
+appcaradep-a1            IN     A    10.0.64.157
+appcaradb-b1             IN     A    10.0.64.158
+appcaradb-b2             IN     A    10.0.64.159
+appcaradb-b3             IN     A    10.0.64.160
+appcararedis-a1          IN     A    10.0.64.161
+appcararedis-a2          IN     A    10.0.64.162
+appcararedis-b1          IN     A    10.0.64.163
+appcararedis-b2          IN     A    10.0.64.164
