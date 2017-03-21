@@ -2,8 +2,8 @@ defaults:
   hint: This file is managed by salt - do not edit localy, changes will be overwritten.
   bashtimeout: 9000
   lxc:
-    saltip: 10.0.32.102
-    repoip: 10.0.32.101
+    saltip: 10.0.32.8
+    repoip: 10.0.32.8
     profile: ubuntu
   salt:
     url: http://repo.cde.1nc/salt/install_salt.sh

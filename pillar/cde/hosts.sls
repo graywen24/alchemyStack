@@ -9,6 +9,7 @@ hosts:
     roles:
       - containerhost
       - ntp
+      - saltmaster
   wess-a2:
     ip4: 9
     partitions: partbig
