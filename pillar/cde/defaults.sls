@@ -12,8 +12,8 @@ defaults:
     powertype: ipmi
     zone: CDE
   dns-servers:
-    - 10.0.32.103
-    - 10.0.32.104
+    - 10.0.32.8
+    - 8.8.8.8
   ntp-servers:
     type: server
     interfaces:
