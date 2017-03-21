@@ -19,6 +19,8 @@ hosts:
     roles:
       - containerhost
       - ntp
+      - dns
+      - dhcp
   ess-a3:
     ip4: 12
     partitions: partbig
