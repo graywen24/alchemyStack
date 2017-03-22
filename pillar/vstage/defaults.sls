@@ -8,8 +8,8 @@ defaults:
     powertype: ipmi
     zone: VSTAGE
   dns-servers:
-    - 10.1.48.103
-    - 10.1.48.104
+    - 10.0.32.9
+    - 8.8.8.8
   ntp-servers:
     type: peer
     interfaces:
@@ -17,8 +17,8 @@ defaults:
         main: br-mgmt
         fallback: eth2
     internal:
-      ntp1.cde.1nc: 10.1.48.10
-      ntp2.cde.1nc: 10.1.48.11
+      ntp1.cde.1nc: 10.0.32.8
+      ntp2.cde.1nc: 10.0.32.9
   hosts:
     network:
       ostack:
