@@ -15,9 +15,9 @@ $TTL	604800
 1net                  IN     A    10.0.64.202
 reseller              IN     A    10.0.64.203
 
-compute-a1            IN     A    10.0.64.10
+ctl-a1                IN     A    10.0.64.10
 compute-a2            IN     A    10.0.64.11
-ctl-a1                IN     A    10.0.64.12
+compute-a1            IN     A    10.0.64.12
 ctl-a2                IN     A    10.0.64.13
 db-a1                 IN     A    10.0.64.14
 db-a2                 IN     A    10.0.64.15

@@ -15,9 +15,9 @@ $TTL	604800
 202             IN   PTR    1net.vstage.1nc.
 203             IN   PTR    reseller.vstage.1nc.
 
-10             IN   PTR    compute-a1.vstage.1nc.
+10             IN   PTR    ctl-a1.vstage.1nc.
 11             IN   PTR    compute-a2.vstage.1nc.
-12             IN   PTR    ctl-a1.vstage.1nc.
+12             IN   PTR    compute-a1.vstage.1nc.
 13             IN   PTR    ctl-a2.vstage.1nc.
 14             IN   PTR    db-a1.vstage.1nc.
 15             IN   PTR    db-a2.vstage.1nc.

@@ -13,8 +13,8 @@ $TTL	604800
 @	   IN NS dns-a2.ostack.vstage.1nc.
 
 10             IN   PTR    compute-a1.ostack.vstage.1nc.
-11             IN   PTR    compute-a2.ostack.vstage.1nc.
-12             IN   PTR    ctl-a1.ostack.vstage.1nc.
+11             IN   PTR    ctl-a1.ostack.vstage.1nc.
+12             IN   PTR    compute-a2.ostack.vstage.1nc.
 13             IN   PTR    ctl-a2.ostack.vstage.1nc.
 14             IN   PTR    db-a1.ostack.vstage.1nc.
 15             IN   PTR    db-a2.ostack.vstage.1nc.

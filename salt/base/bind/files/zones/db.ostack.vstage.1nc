@@ -16,8 +16,8 @@ dns-a1               IN     A    10.0.48.118
 dns-a2               IN     A    10.0.48.119
 
 compute-a1        IN   A   10.0.48.10
-compute-a2        IN   A   10.0.48.11
-ctl-a1            IN   A   10.0.48.12
+ctl-a1            IN   A   10.0.48.11
+compute-a2        IN   A   10.0.48.12
 ctl-a2            IN   A   10.0.48.13
 db-a1             IN   A   10.0.48.14
 db-a2             IN   A   10.0.48.15
