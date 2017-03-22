@@ -8,8 +8,8 @@
 {% endif %}
 
 # important infrastructure resources
-10.0.32.101 repo.cde.1nc repo
-10.0.32.102 salt.cde.1nc salt
+10.0.32.8 repo.cde.1nc repo
+10.0.32.8 salt.cde.1nc salt
 
 {% if 'cdosapp' in grains.roles -%}
 
