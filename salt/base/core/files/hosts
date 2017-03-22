@@ -4,7 +4,9 @@
 {% if 'ostack' in grains.roles -%}
 127.0.1.1  {{ grains.host }}.{{ pillar.defaults.envo }} {{ grains.host }}
 {% else -%}
-{{ grains['ipv4'][0] }}  {{ grains.fqdn }} {{ grains.host }}
+#{{ grains['ipv4'][0] }}  {{ grains.fqdn }} {{ grains.host }}
+#10.0.64.0 is always eth1 so will try to change here
+{{ grains.fqdn_ip4 }}  {{ grains.fqdn }} {{ grains.host }}
 {% endif %}
 
 # important infrastructure resources
