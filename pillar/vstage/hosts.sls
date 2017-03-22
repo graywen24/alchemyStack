@@ -1,6 +1,6 @@
 hosts:
   compute-a1:
-    ip4: 10
+    ip4: 12
     partitions: partsmall
     network:
       manage:
@@ -18,7 +18,7 @@ hosts:
     roles:
       - ostack
   ctl-a1:
-    ip4: 12
+    ip4: 10
     partitions: partbig
     network:
       manage:
