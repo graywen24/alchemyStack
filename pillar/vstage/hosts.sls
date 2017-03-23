@@ -27,11 +27,14 @@ hosts:
       ha: {}
     packages:
       - vlan
+      - ipvsadm
     modules:
       - openvswitch
       - 8021q
       - ip_tables
       - xt_TPROXY
+      - br_netfilter
+      - ip_vs
     roles:
       - containerhost
   ctl-a2:
@@ -44,11 +47,14 @@ hosts:
       ha: {}
     packages:
       - vlan
+      - ipvsadm
     modules:
       - openvswitch
       - 8021q
       - ip_tables
       - xt_TPROXY
+      - br_netfilter
+      - ip_vs
     roles:
       - containerhost
   db-a1:
