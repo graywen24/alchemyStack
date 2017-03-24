@@ -24,7 +24,7 @@ hosts:
       manage:
         mac: 14:18:77:57:70:D2
       ostack: {}
-      ha: {}
+
     packages:
       - vlan
       - ipvsadm
