@@ -15,6 +15,7 @@ defaults:
          link: br-mgmt
          vpref: vma
          phys: eth1
+         postup: route add -host 10.0.64.10/32 gw 10.0.32.1  #for connect to ess-a1
       ostack:
          type: bridge
          name: eth1
