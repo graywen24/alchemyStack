@@ -28,7 +28,7 @@ defaults:
          domain: vstage.1nc
          ip4net: 10.0.64.{0}/24
          #postup: route add -net 10.1.48.0/20 gw 10.0.48.1
-         gateway: 10.0.48.1
+         gateway: 10.0.64.1
       ha:
         domain: ha.vstage.1nc
         ip4net: 192.168.100.{0}/24
