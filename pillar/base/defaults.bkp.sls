@@ -1,3 +1,5 @@
+#for backup use#
+
 defaults:
   hint: This file is managed by salt - do not edit localy, changes will be overwritten.
   bashtimeout: 9000
@@ -14,13 +16,16 @@ defaults:
          name: eth0
          link: br-mgmt
          vpref: vma
-         phys: eth1
+         phys: eth2
       ostack:
-         type: bridge
+         type: bond
          name: eth1
          link: br-stack
          vpref: vos
-         phys: eth2
+         phys: bond0
+         bond:
+           - eth0
+           - eth1
       storage:
          type: bond
          name: eth2

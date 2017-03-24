@@ -23,15 +23,15 @@ defaults:
     network:
       ostack:
          domain: ostack.vstage.1nc
-         ip4net: 10.0.32.{0}/24
+         ip4net: 10.0.48.{0}/24
       manage:
          domain: vstage.1nc
-         ip4net: 10.0.48.{0}/24
-         postup: route add -net 10.1.48.0/20 gw 10.0.48.1
+         ip4net: 10.0.64.{0}/24
+         #postup: route add -net 10.1.48.0/20 gw 10.0.48.1
          gateway: 10.0.48.1
       storage:
          domain: store.vstage.1nc
-         ip4net: 10.0.64.{0}/24
+         ip4net: 10.0.123.{0}/24
          type: bridge
          name: eth2
          link: br-store
